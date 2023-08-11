@@ -1,6 +1,6 @@
 /* eslint-disable quote-props */
 import 'regenerator-runtime/runtime';
-import GQL_TOKEN from '../../../../temp';
+import 'dotenv';
 
 class CardImageSwapper {
     constructor(entityId) {
@@ -47,7 +47,7 @@ class CardImageSwapper {
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GQL_TOKEN}`,
+                    'Authorization': `Bearer ${process.env.graphQLUrl}`,
                 },
                 body: JSON.stringify({ query: gql }),
             });
