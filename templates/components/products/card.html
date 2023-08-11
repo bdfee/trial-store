@@ -1,3 +1,4 @@
+
 <article
     class="card
     {{#if alternate}} card--alternate{{/if}}"
@@ -64,6 +65,20 @@
            aria-label="{{> components/products/product-info}}"
            data-event-type="product-click"
         >
+
+            {{#if id '===' 112}}
+                <div class="card-image-swapper"> 
+                    <div class="card-img-container">
+                    {{> components/common/responsive-img
+                        image=image
+                        class="card-image"
+                        fallback_size=theme_settings.productgallery_size
+                        lazyload=theme_settings.lazyload_mode
+                        default_image=theme_settings.default_image_product
+                    }}
+                    </div> 
+                </div>
+            {{else}}
             <div class="card-img-container">
                 {{> components/common/responsive-img
                     image=image
@@ -73,6 +88,8 @@
                     default_image=theme_settings.default_image_product
                 }}
             </div>
+            {{/if}}
+
         </a>
 
         <figcaption class="card-figcaption">
