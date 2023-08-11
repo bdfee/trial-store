@@ -1,4 +1,3 @@
-
 <article
     class="card
     {{#if alternate}} card--alternate{{/if}}"
@@ -65,7 +64,10 @@
            aria-label="{{> components/products/product-info}}"
            data-event-type="product-click"
         >
-
+<!-- 
+    using product ID from input object to check if it is our special object
+    conditionally wrapping the card img container in a div to target class
+-->
             {{#if id '===' 112}}
                 <div class="card-image-swapper"> 
                     <div class="card-img-container">
