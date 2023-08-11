@@ -1,6 +1,6 @@
 /* eslint-disable quote-props */
 import 'regenerator-runtime/runtime';
-import GQL_TOKEN from '../temp';
+import GQL_TOKEN from '../../../../temp';
 
 class CardImageSwapper {
     constructor(entityId) {
