@@ -36,10 +36,6 @@ There are a few important arguments to know about when using this component:
 
 --}}
 
-// split out this to a seperate template or fragment
-<div
-    class="card-image-swapper"
->
     <img {{#if image}}{{!-- Get the default image for legacy browsers that do not support srcset
     --}}
 
@@ -74,6 +70,3 @@ There are a few important arguments to know about when using this component:
     {{#if lazyload '==' 'lazyload'}}loading="lazy"{{/if}}
     {{otherAttributes}} 
     />
-</div>
-
-<script src="{{cdn 'assets/js/theme/common/card-image-swapper.js'}}"></script>

@@ -1,93 +1,85 @@
 /* eslint-disable quote-props */
-// import util from '@bigcommerce/stencil-utils';
+import 'regenerator-runtime/runtime';
+import GQL_TOKEN from '../temp';
 
-// entityId: number
+class CardImageSwapper {
+    constructor(entityId) {
+        this.entityId = entityId;
+        this.graphQLUrl = 'https://trial-store-g9.mybigcommerce.com/graphql';
+        this.originalSrcSet = [];
+        this.wrapper = document.querySelector('.card-image-swapper');
+        this.imgElement = this.wrapper.querySelector('img.card-image');
+        this.card = document.querySelector('.card');
+        this.getProductImages();
+        this.bindEvents();
+    }
 
-async function getProductImages(entityId) {
-    const graphQLUrl = 'https://trial-store-g9.mybigcommerce.com/graphql';
-
-    const gql = `
-      query GetProductById {
-        site {
-          products(entityIds:[${entityId}]) {
-            edges {
-              node {
-                entityId
-                name
-                images {
-                  edges {
-                    node {
-                      url(width: 500)
+    async getProductImages() {
+        const gql = `
+          query GetProductById {
+            site {
+              products(entityIds:[${this.entityId}]) {
+                edges {
+                  node {
+                    entityId
+                    name
+                    images {
+                      edges {
+                        node {
+                          url(width: 500)
+                        }
+                      }
                     }
                   }
                 }
               }
             }
           }
-        }
-      }
-    `;
+        `;
 
-    try {
-        const response = await fetch(graphQLUrl, {
-            method: 'POST',
-            credentials: 'include',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJjaWQiOjEsImNvcnMiOlsiaHR0cDovL2xvY2FsaG9zdDozMDAwIl0sImVhdCI6MjE0NzQ4MzY0NywiaWF0IjoxNjkxNzEwMTQ1LCJpc3MiOiJCQyIsInNpZCI6MTAwMjk5MzA4NCwic3ViIjoiY28waWNvd25lNXk4ZXZhZzlrNTZpZDRkcW85NWRrNyIsInN1Yl90eXBlIjoyLCJ0b2tlbl90eXBlIjoxfQ.V8V1oEQLsygLWagJ_J1Z-NaG5yGE66731hfun7iJeKBZNKKDPIGb1UP771StGkxBYSVMUGNOfo_X823PjfNyiA',
-            },
-            body: JSON.stringify({ query: gql }),
+        const graphQLUrl = 'https://trial-store-g9.mybigcommerce.com/graphql';
+
+        try {
+            console.log('try fetch');
+            const response = await fetch(graphQLUrl, {
+                method: 'POST',
+                credentials: 'include',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GQL_TOKEN}`,
+                },
+                body: JSON.stringify({ query: gql }),
+            });
+
+            if (!this.entityId) {
+                throw new Error('missing entityId: number in params');
+            }
+
+            if (!response.ok) {
+                throw new Error('Network response not okay');
+            }
+
+            const data = await response.json();
+            this.productImages = data.data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            throw error;
+        }
+    }
+
+    bindEvents() {
+        console.log('bind events');
+        $('img.card-image').on('mouseover', () => {
+            this.originalSrcSet.push(this.imgElement.srcset);
+            const imageUrl = this.productImages.site.products.edges[0].node.images.edges[1].node.url;
+            this.imgElement.srcset = imageUrl;
         });
 
-        if (!entityId) {
-            throw new Error('missing entityId: number in params');
-        }
-
-        if (!response.ok) {
-            throw new Error('Network response not okay');
-        }
-
-        const data = await response.json();
-        return data.data;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        throw error;
+        $('img.card-image').on('mouseout', () => {
+            this.imgElement.srcset = this.originalSrcSet.pop();
+        });
     }
 }
 
-const imageSwapper = async () => {
-    const wrapper = document.querySelector('.card-image-swapper');
-    const imgElement = wrapper.querySelector('img.card-image');
-
-
-    // this logic may need to be somewhere else
-    const card = document.querySelector('.card');
-    const dataEntityId = card.getAttribute('data-entity-id');
-
-    // console.log(dataEntityId);
-
-    if (dataEntityId === '112') {
-        const productImages = await getProductImages(112);
-
-        const originalSrcSet = [];
-        // alt tags
-        // title
-        // others?
-
-        const handleMouseOver = () => {
-            originalSrcSet.push(imgElement.srcset);
-            const imageUrl = productImages.site.products.edges[0].node.images.edges[1].node.url;
-            imgElement.srcset = imageUrl;
-        };
-
-        const handleMouseOut = () => {
-            imgElement.srcset = originalSrcSet.pop();
-        };
-
-        imgElement.addEventListener('mouseover', handleMouseOver);
-        imgElement.addEventListener('mouseout', handleMouseOut);
-    }
-};
-
-imageSwapper();
+export default CardImageSwapper;

@@ -3,6 +3,7 @@ import CatalogPage from './catalog';
 import compareProducts from './global/compare-products';
 import FacetedSearch from './common/faceted-search';
 import { createTranslationDictionary } from '../theme/common/utils/translations-utils';
+import CardImageSwapper from './common/card-image-swapper';
 
 export default class Category extends CatalogPage {
     constructor(context) {
@@ -46,6 +47,12 @@ export default class Category extends CatalogPage {
         $('a.reset-btn').on('click', () => this.setLiveRegionsAttributes($('span.reset-message'), 'status', 'polite'));
 
         this.ariaNotifyNoProducts();
+        this.initCardImageSwapper();
+        this.logContext();
+    }
+
+    logContext() {
+        console.log('here', this.context);
     }
 
     ariaNotifyNoProducts() {
@@ -100,5 +107,9 @@ export default class Category extends CatalogPage {
                 onInvalidPrice,
             },
         });
+    }
+
+    initCardImageSwapper() {
+        this.cardImageSwapper = new CardImageSwapper(112);
     }
 }
