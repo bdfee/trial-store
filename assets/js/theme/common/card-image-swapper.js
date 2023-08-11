@@ -1,18 +1,31 @@
 /* eslint-disable quote-props */
 import 'regenerator-runtime/runtime';
 import 'dotenv';
+import $ from 'jquery'; // Import jQuery
 
+// passing entity ID, could additionally pass url
 class CardImageSwapper {
     constructor(entityId) {
         this.entityId = entityId;
         this.graphQLUrl = 'https://trial-store-g9.mybigcommerce.com/graphql';
         this.originalSrcSet = [];
-        this.wrapper = document.querySelector('.card-image-swapper');
-        this.imgElement = this.wrapper.querySelector('img.card-image');
-        this.card = document.querySelector('.card');
+        this.wrapper = null;
+        this.imgElement = null;
+        this.card = null;
+
+        this.init();
+    }
+
+    // selectors for DOM els
+    async init() {
+        this.wrapper = $('.card-image-swapper');
+        this.imgElement = this.wrapper.find('img.card-image');
+        this.card = $('.card');
+
         this.getProductImages();
         this.bindEvents();
     }
+
 
     async getProductImages() {
         const gql = `
@@ -37,19 +50,16 @@ class CardImageSwapper {
           }
         `;
 
-        const graphQLUrl = 'https://trial-store-g9.mybigcommerce.com/graphql';
-
         try {
-            console.log('try fetch');
-            const response = await fetch(graphQLUrl, {
+            const response = await $.ajax({
+                url: this.graphQLUrl,
                 method: 'POST',
-                credentials: 'include',
-                mode: 'cors',
+                dataType: 'json',
+                contentType: 'application/json',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${process.env.graphQLUrl}`,
                 },
-                body: JSON.stringify({ query: gql }),
+                data: JSON.stringify({ query: gql }),
             });
 
             if (!this.entityId) {
@@ -60,26 +70,24 @@ class CardImageSwapper {
                 throw new Error('Network response not okay');
             }
 
-            const data = await response.json();
-            this.productImages = data.data;
+            this.productImages = response.data;
         } catch (error) {
-            console.error('Error fetching data:', error);
             throw error;
         }
     }
 
     bindEvents() {
-        console.log('bind events');
         $('img.card-image').on('mouseover', () => {
-            this.originalSrcSet.push(this.imgElement.srcset);
+            this.originalSrcSet.push(this.imgElement.attr('srcset'));
             const imageUrl = this.productImages.site.products.edges[0].node.images.edges[1].node.url;
-            this.imgElement.srcset = imageUrl;
+            this.imgElement.attr('srcset', imageUrl);
         });
 
         $('img.card-image').on('mouseout', () => {
-            this.imgElement.srcset = this.originalSrcSet.pop();
+            this.imgElement.attr('srcset', this.originalSrcSet.pop());
         });
     }
 }
 
 export default CardImageSwapper;
+
