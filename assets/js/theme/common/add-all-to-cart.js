@@ -1,12 +1,20 @@
+/* eslint-disable quote-props */
 import 'regenerator-runtime/runtime';
 
 class AddAllToCart {
     constructor() {
         this.token = null;
-        this.btn = null;
         this.cartEntityId = null;
         this.productEntityId = null;
         this.lineItemEntityId = null;
+
+        this.btn = null;
+        this.removeBtn = $('<button>', {
+            id: 'remove-all-from-cart-btn',
+            class: 'button button-secondary',
+            type: 'button',
+            text: 'Remove all from Cart',
+        });
 
         this.init();
     }
@@ -17,8 +25,58 @@ class AddAllToCart {
         this.productEntityId = $('.add-all-to-cart-container').attr('data-entity-id');
         this.btn = $('#add-all-to-cart-btn');
 
-        this.bindEvents();
+        this.checkLocalStorageForLineItemEntityId();
+        this.bindAddButton();
     }
+
+
+    async checkLocalStorageForLineItemEntityId() {
+        if (localStorage.getItem('lineItemEntityId')) {
+            this.cartEntityId = localStorage.getItem('cartEntityId');
+            this.lineItemEntityId = localStorage.getItem('lineItemEntityId');
+            this.updateUIOnLoad();
+            this.bindRemoveButton();
+        }
+    }
+
+
+    async getCart() {
+        const gql = `
+      query getCart($cartEntityId: String!) {
+        site {
+          cart(entityId: $cartEntityId) {
+            lineItems {
+              physicalItems {
+                entityId
+              }
+            }
+          }
+        }
+      }`;
+
+        const variables = {
+            cartEntityId: this.cartEntityId,
+        };
+
+        fetch('/graphql', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.token}`,
+            },
+            body: JSON.stringify({
+                query: gql,
+                variables,
+            }),
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+            })
+            .catch(error => console.error(error));
+    }
+
 
     async createCart() {
         const variables = {
@@ -83,19 +141,15 @@ class AddAllToCart {
                     }
                 });
 
+                localStorage.setItem('cartEntityId', this.cartEntityId);
+                localStorage.setItem('lineItemEntityId', this.lineItemEntityId);
+
                 $('.cart-quantity')
                     .text(1)
                     .toggleClass('countPill--positive', true);
-
-                const removeButton = $('<button>', {
-                    id: 'remove-all-from-cart-btn',
-                    class: 'button button-secondary',
-                    type: 'button',
-                    text: 'Remove all from Cart',
-                });
-
                 // Append the button to the specified container
-                $('.actionBar').append(removeButton);
+                $('.actionBar').append(this.removeBtn);
+                $('#add-all-to-cart-btn').prop('disabled', true);
 
                 $('#remove-all-from-cart-btn').on('click', () => {
                     this.removeFromCart();
@@ -111,6 +165,8 @@ class AddAllToCart {
                 lineItemEntityId: this.lineItemEntityId,
             },
         };
+
+        console.log(variables);
 
         const gql = `
           mutation deleteCartLineItem($deleteCartLineItemInput: DeleteCartLineItemInput!) {
@@ -141,18 +197,32 @@ class AddAllToCart {
             }),
         })
             .then(response => response.json())
-            .then(() => {
+            .then((response) => {
+                console.log(response);
                 $('.cart-quantity')
                     .text(1)
                     .toggleClass('countPill--positive', false);
 
                 $('.actionBar').find('#remove-all-from-cart-btn').remove();
+                $('#add-all-to-cart-btn').prop('disabled', false);
+
+                localStorage.removeItem('lineItemEntityId');
             })
             .catch(error => console.error(error));
     }
 
+    updateUIOnLoad() {
+        $('#add-all-to-cart-btn').prop('disabled', true);
+        $('.actionBar').append(this.removeBtn);
+    }
 
-    bindEvents() {
+    bindRemoveButton() {
+        $('#remove-all-from-cart-btn').on('click', () => {
+            this.removeFromCart();
+        });
+    }
+
+    bindAddButton() {
         $('#add-all-to-cart-btn').on('click', async () => {
             await this.createCart();
         });
