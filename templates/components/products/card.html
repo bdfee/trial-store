@@ -69,7 +69,10 @@
     conditionally wrapping the card img container in a div to target class
 -->
             {{#if id '===' 112}}
-                <div class="card-image-swapper"> 
+                <div 
+                    class="card-image-swapper"
+                    data-storefront-token="{{settings.storefront_api.token}}"
+                > 
                     <div class="card-img-container">
                     {{> components/common/responsive-img
                         image=image
