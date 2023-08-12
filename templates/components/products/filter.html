@@ -2,7 +2,11 @@
     <form  method="get" data-sort-by="product">
         {{> components/category/sort-box sort=sort}}
     </form>
-    <form>
-        {{> components/category/add-all-to-cart}}
-    </form>
+    {{#if category.products}}
+        {{#each category.products}}
+            {{#if id '===' 112}}
+                {{> components/category/add-all-to-cart}}
+            {{/if}}
+        {{/each}}
+    {{/if}}
 </div>

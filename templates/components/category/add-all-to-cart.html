@@ -1,13 +1,9 @@
-{{#if category.products}}
-  {{#each category.products}}
-    {{#if id '===' 112}}
-      <button
-        class="button button-primary"
-        data-entity-id="{{id}}"
-        data-add-to-cart-url="{{add_to_cart_url}}"
-      >
-        add all to cart
-      </button>
-    {{/if}}
-  {{/each}}
-{{/if}}
+<div class="add-all-to-cart-container">
+  <a href="{{add_to_cart_url}}" 
+      data-event-type="product-click" 
+      data-button-type="add-cart" 
+      class="button button-primary"
+  >
+      Add all to Cart
+  </a>
+</div>
