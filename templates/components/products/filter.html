@@ -1,3 +1,5 @@
+{{inject "cartItem" product.title}}
+
 <div class="actionBar" data-storefront-token="{{settings.storefront_api.token}}">
     <form  method="get" data-sort-by="product">
         {{> components/category/sort-box sort=sort}}
