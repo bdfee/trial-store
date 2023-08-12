@@ -19,7 +19,6 @@ class AddAllToCart {
         this.init();
     }
 
-    // check for a cart existing first
     async init() {
         this.token = $('.actionBar').attr('data-storefront-token');
         this.productEntityId = $('.add-all-to-cart-container').attr('data-entity-id');
@@ -38,7 +37,6 @@ class AddAllToCart {
             this.bindRemoveButton();
         }
     }
-
 
     async getCart() {
         const gql = `
