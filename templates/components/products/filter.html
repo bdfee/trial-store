@@ -1,3 +1,12 @@
-<form class="actionBar" method="get" data-sort-by="product">
-    {{> components/category/sort-box sort=sort}}
-</form>
+<div class="actionBar" data-storefront-token="{{settings.storefront_api.token}}">
+    <form  method="get" data-sort-by="product">
+        {{> components/category/sort-box sort=sort}}
+    </form>
+    {{#if category.products}}
+        {{#each category.products}}
+            {{#if id '===' 112}}
+                {{> components/category/add-all-to-cart}}
+            {{/if}}
+        {{/each}}
+    {{/if}}
+</div>
