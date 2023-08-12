@@ -9,14 +9,13 @@ class AddAllToCart {
         this.init();
     }
 
-
+    // check for a cart existing first
     async init() {
         this.token = $('.actionBar').attr('data-storefront-token');
         this.entityId = $('.add-all-to-cart-container').attr('data-entity-id');
         this.btn = $('#add-all-to-cart-btn');
 
         this.bindEvents();
-        console.log('here');
     }
 
     async createCart() {
@@ -32,33 +31,33 @@ class AddAllToCart {
         };
 
         const gql = `
-  mutation createCartSimple($createCartInput: CreateCartInput!) {
-  cart {
-    createCart(input: $createCartInput) {
-      cart {
-        entityId
-        lineItems {
-          physicalItems {
-            name
-            quantity
-          }
-          digitalItems {
-            name
-            quantity
-          }
-          giftCertificates {
-            name
-          }
-          customItems {
-            name
-            quantity
+          mutation createCartSimple($createCartInput: CreateCartInput!) {
+          cart {
+            createCart(input: $createCartInput) {
+              cart {
+                entityId
+                lineItems {
+                  physicalItems {
+                    name
+                    quantity
+                  }
+                  digitalItems {
+                    name
+                    quantity
+                  }
+                  giftCertificates {
+                    name
+                  }
+                  customItems {
+                    name
+                    quantity
+                  }
+                }
+              }
+            }
           }
         }
-      }
-    }
-  }
-}
-`;
+        `;
 
         fetch('/graphql', {
             method: 'POST',
@@ -72,8 +71,10 @@ class AddAllToCart {
             }),
         })
             .then(response => response.json())
-            .then(result => {
-                console.log(result);
+            .then(() => {
+                $('.cart-quantity')
+                    .text(1)
+                    .toggleClass('countPill--positive', 1);
             })
             .catch(error => console.error(error));
     }
