@@ -5,7 +5,6 @@ import 'regenerator-runtime/runtime';
 class CardImageSwapper {
     constructor(entityId) {
         this.entityId = entityId;
-        this.graphQLUrl = 'https://trial-store-g9.mybigcommerce.com/graphql/';
         this.originalSrcSet = [];
         this.wrapper = null;
         this.imgElement = null;
@@ -17,10 +16,10 @@ class CardImageSwapper {
     // selectors for DOM els
     async init() {
         this.wrapper = $('.card-image-swapper');
-        this.imgElement = this.wrapper.find('img.card-image');
+        this.imgElement = $('.card-image', this.wrapper);
         this.card = $('.card');
         this.token = $('.card-image-swapper').attr('data-storefront-token');
-        console.log(this.token);
+
         this.getProductImages();
         this.bindEvents();
     }
@@ -70,7 +69,6 @@ class CardImageSwapper {
     bindEvents() {
         $('img.card-image').on('mouseover', () => {
             this.originalSrcSet.push(this.imgElement.attr('srcset'));
-            console.log(this.productImages);
             const imageUrl = this.productImages.data.site.products.edges[0].node.images.edges[1].node.url;
             this.imgElement.attr('srcset', imageUrl);
         });
