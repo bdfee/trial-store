@@ -19,7 +19,6 @@ class CardImageSwapper {
         this.imgElement = $('.card-image', this.wrapper);
         this.card = $('.card');
         this.token = $('.card-image-swapper').attr('data-storefront-token');
-
         this.getProductImages();
         this.bindEvents();
     }
