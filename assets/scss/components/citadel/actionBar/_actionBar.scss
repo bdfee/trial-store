@@ -8,6 +8,7 @@
         background-color: $input-bg-color;
         border: $actionBar-form-field-border;
         border-radius: $actionBar-form-field-radius;
+        margin-right: 1em;
 
         &:hover {
             border-color: stencilColor("input-border-color-active");

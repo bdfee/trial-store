@@ -47,16 +47,10 @@ export default class Category extends CatalogPage {
 
         $('a.reset-btn').on('click', () => this.setLiveRegionsAttributes($('span.reset-message'), 'status', 'polite'));
 
-        console.log(this.context);
         this.ariaNotifyNoProducts();
         this.initCardImageSwapper();
         this.initAddAllToCart();
-        // this.logContext();
     }
-
-    // logContext() {
-    //     console.log('here', this.context);
-    // }
 
     ariaNotifyNoProducts() {
         const $noProductsMessage = $('[data-no-products-notification]');
