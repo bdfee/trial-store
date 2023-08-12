@@ -4,6 +4,7 @@ import compareProducts from './global/compare-products';
 import FacetedSearch from './common/faceted-search';
 import { createTranslationDictionary } from '../theme/common/utils/translations-utils';
 import CardImageSwapper from './common/card-image-swapper';
+import AddAllToCart from './common/add-all-to-cart';
 
 export default class Category extends CatalogPage {
     constructor(context) {
@@ -48,6 +49,7 @@ export default class Category extends CatalogPage {
 
         this.ariaNotifyNoProducts();
         this.initCardImageSwapper();
+        this.initAddAllToCart();
         // this.logContext();
     }
 
@@ -111,5 +113,9 @@ export default class Category extends CatalogPage {
 
     initCardImageSwapper() {
         this.cardImageSwapper = new CardImageSwapper(112);
+    }
+
+    initAddAllToCart() {
+        this.AddAllToCart = new AddAllToCart();
     }
 }
