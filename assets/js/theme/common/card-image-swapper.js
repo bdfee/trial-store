@@ -3,8 +3,8 @@ import 'regenerator-runtime/runtime';
 
 // passing entity ID, could additionally pass url
 class CardImageSwapper {
-    constructor(entityId) {
-        this.entityId = entityId;
+    constructor() {
+        this.entityId = null;
         this.originalSrcSet = [];
         this.wrapper = null;
         this.imgElement = null;
@@ -15,14 +15,19 @@ class CardImageSwapper {
 
     // selectors for DOM els
     async init() {
-        this.wrapper = $('.card-image-swapper');
-        this.imgElement = $('.card-image', this.wrapper);
+        const $wrapper = $('.card-image-swapper');
+        const $cardImage = $('.card-image', $wrapper);
+
+        this.wrapper = $wrapper;
+        this.imgElement = $cardImage;
         this.card = $('.card');
-        this.token = $('.card-image-swapper').attr('data-storefront-token');
+        this.token = $wrapper.attr('data-storefront-token');
+        this.entityId = $wrapper.attr('data-product-id');
+
         this.getProductImages();
         this.bindEvents();
     }
-
+    // get product images
     async getProductImages() {
         const gql = `
         query GetProductById {
@@ -45,7 +50,6 @@ class CardImageSwapper {
           }
         }
       `;
-
 
         fetch('/graphql', {
             method: 'POST',

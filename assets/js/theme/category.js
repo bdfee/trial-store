@@ -50,12 +50,7 @@ export default class Category extends CatalogPage {
         this.ariaNotifyNoProducts();
         this.initCardImageSwapper();
         this.initAddAllToCart();
-        // this.logContext();
     }
-
-    // logContext() {
-    //     console.log('here', this.context);
-    // }
 
     ariaNotifyNoProducts() {
         const $noProductsMessage = $('[data-no-products-notification]');
@@ -112,7 +107,7 @@ export default class Category extends CatalogPage {
     }
 
     initCardImageSwapper() {
-        this.cardImageSwapper = new CardImageSwapper(112);
+        this.cardImageSwapper = new CardImageSwapper();
     }
 
     initAddAllToCart() {

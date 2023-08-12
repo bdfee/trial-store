@@ -33,48 +33,10 @@ class AddAllToCart {
         if (localStorage.getItem('lineItemEntityId')) {
             this.cartEntityId = localStorage.getItem('cartEntityId');
             this.lineItemEntityId = localStorage.getItem('lineItemEntityId');
-            this.updateUIOnLoad();
+            this.updateUIOnCartAdd();
             this.bindRemoveButton();
         }
     }
-
-    async getCart() {
-        const gql = `
-      query getCart($cartEntityId: String!) {
-        site {
-          cart(entityId: $cartEntityId) {
-            lineItems {
-              physicalItems {
-                entityId
-              }
-            }
-          }
-        }
-      }`;
-
-        const variables = {
-            cartEntityId: this.cartEntityId,
-        };
-
-        fetch('/graphql', {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`,
-            },
-            body: JSON.stringify({
-                query: gql,
-                variables,
-            }),
-        })
-            .then(response => response.json())
-            .then(result => {
-                console.log(result);
-            })
-            .catch(error => console.error(error));
-    }
-
 
     async createCart() {
         const variables = {
@@ -146,7 +108,7 @@ class AddAllToCart {
                     .text(1)
                     .toggleClass('countPill--positive', true);
                 // Append the button to the specified container
-                this.updateUIOnLoad();
+                this.updateUIOnCartAdd();
 
                 $('#remove-all-from-cart-btn').on('click', () => {
                     this.removeFromCart();
@@ -194,8 +156,7 @@ class AddAllToCart {
             }),
         })
             .then(response => response.json())
-            .then((response) => {
-                console.log(response);
+            .then(() => {
                 $('.cart-quantity')
                     .text(1)
                     .toggleClass('countPill--positive', false);
@@ -208,7 +169,7 @@ class AddAllToCart {
             .catch(error => console.error(error));
     }
 
-    updateUIOnLoad() {
+    updateUIOnCartAdd() {
         $('#add-all-to-cart-btn').prop('disabled', true);
         $('.add-all-to-cart-container').append(this.removeBtn);
     }
@@ -220,8 +181,8 @@ class AddAllToCart {
     }
 
     bindAddButton() {
-        $('#add-all-to-cart-btn').on('click', async () => {
-            await this.createCart();
+        $('#add-all-to-cart-btn').on('click', () => {
+            this.createCart();
         });
     }
 }
