@@ -11,7 +11,7 @@ class AddAllToCart {
         this.btn = null;
         this.removeBtn = $('<button>', {
             id: 'remove-all-from-cart-btn',
-            class: 'button button-secondary',
+            class: 'button button-primary',
             type: 'button',
             text: 'Remove all from Cart',
         });
@@ -148,8 +148,7 @@ class AddAllToCart {
                     .text(1)
                     .toggleClass('countPill--positive', true);
                 // Append the button to the specified container
-                $('.actionBar').append(this.removeBtn);
-                $('#add-all-to-cart-btn').prop('disabled', true);
+                this.updateUIOnLoad();
 
                 $('#remove-all-from-cart-btn').on('click', () => {
                     this.removeFromCart();
@@ -213,7 +212,7 @@ class AddAllToCart {
 
     updateUIOnLoad() {
         $('#add-all-to-cart-btn').prop('disabled', true);
-        $('.actionBar').append(this.removeBtn);
+        $('.add-all-to-cart-container').append(this.removeBtn);
     }
 
     bindRemoveButton() {
