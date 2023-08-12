@@ -48,12 +48,12 @@ export default class Category extends CatalogPage {
 
         this.ariaNotifyNoProducts();
         this.initCardImageSwapper();
-        this.logContext();
+        // this.logContext();
     }
 
-    logContext() {
-        console.log('here', this.context);
-    }
+    // logContext() {
+    //     console.log('here', this.context);
+    // }
 
     ariaNotifyNoProducts() {
         const $noProductsMessage = $('[data-no-products-notification]');

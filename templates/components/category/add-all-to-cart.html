@@ -1,0 +1,13 @@
+{{#if category.products}}
+  {{#each category.products}}
+    {{#if id '===' 112}}
+      <button
+        class="button button-primary"
+        data-entity-id="{{id}}"
+        data-add-to-cart-url="{{add_to_cart_url}}"
+      >
+        add all to cart
+      </button>
+    {{/if}}
+  {{/each}}
+{{/if}}
