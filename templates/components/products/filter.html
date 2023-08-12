@@ -5,7 +5,7 @@
     {{#if category.products}}
         {{#each category.products}}
             {{#if id '===' 112}}
-                {{> components/category/add-all-to-cart}}
+                {{> components/category/add-all-to-cart token=settings.storefront_api.token}}
             {{/if}}
         {{/each}}
     {{/if}}

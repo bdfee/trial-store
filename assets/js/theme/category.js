@@ -47,6 +47,7 @@ export default class Category extends CatalogPage {
 
         $('a.reset-btn').on('click', () => this.setLiveRegionsAttributes($('span.reset-message'), 'status', 'polite'));
 
+        console.log(this.context);
         this.ariaNotifyNoProducts();
         this.initCardImageSwapper();
         this.initAddAllToCart();
@@ -112,7 +113,7 @@ export default class Category extends CatalogPage {
     }
 
     initCardImageSwapper() {
-        this.cardImageSwapper = new CardImageSwapper(112);
+        this.cardImageSwapper = new CardImageSwapper();
     }
 
     initAddAllToCart() {
